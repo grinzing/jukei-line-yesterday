@@ -1,0 +1,4 @@
+input,output,type,image_url,sender_name,sender_icon_url,quick_replies,buttons,video_url,preview_image_url
+メニュー,どちらをお選びになりますか？,buttons,,,,,サービス案内|料金プラン|お問い合わせ,,
+商品案内,おすすめ商品をご紹介します,carousel,,,,,商品A|商品B|商品C,,
+ニュース,最新ニュースです,text,https://jukei-images.web.app/news.jpg,ニュースBot,https://jukei-images.web.app/news-icon.jpg,,,
