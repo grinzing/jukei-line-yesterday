@@ -18,6 +18,8 @@ export type MessagePattern = {
 // CSVからメッセージパターンを読み込む
 export function loadMessagePatternsFromCSV(filePath: string): MessagePattern[] {
   try {
+    console.log("Attempting to load CSV from:", filePath);
+    
     // Vercelでの複数のパスを試行
     const possiblePaths = [
       path.resolve('./', filePath),
@@ -29,16 +31,24 @@ export function loadMessagePatternsFromCSV(filePath: string): MessagePattern[] {
       filePath
     ];
     
+    console.log("Testing possible paths:", possiblePaths);
+    
     let csvFile = '';
     let usedPath = '';
     
     for (const testPath of possiblePaths) {
       try {
+        console.log(`Testing path: ${testPath}`);
         if (fs.existsSync(testPath)) {
+          console.log(`File exists at: ${testPath}`);
           csvFile = fs.readFileSync(testPath, "utf-8");
           usedPath = testPath;
           console.log(`Successfully loaded CSV from: ${testPath}`);
+          console.log(`File size: ${csvFile.length} characters`);
+          console.log(`First 200 characters: ${csvFile.substring(0, 200)}`);
           break;
+        } else {
+          console.log(`File does not exist at: ${testPath}`);
         }
       } catch (err) {
         console.log(`Failed to read from ${testPath}:`, err.message);
@@ -49,6 +59,8 @@ export function loadMessagePatternsFromCSV(filePath: string): MessagePattern[] {
       console.error('CSV file not found in any of the attempted paths:', possiblePaths);
       throw new Error('CSV file not found');
     }
+    
+    console.log("Parsing CSV content...");
     const patterns = parse(csvFile, {
       columns: true,
       skip_empty_lines: false,
@@ -57,6 +69,15 @@ export function loadMessagePatternsFromCSV(filePath: string): MessagePattern[] {
       relax_quotes: true,
       relax_column_count: true,
     }) as MessagePattern[]
+
+    console.log(`Parsed ${patterns.length} patterns from CSV`);
+    
+    // デバッグ: 最初の数パターンを確認
+    console.log("First 5 patterns:", patterns.slice(0, 5).map(p => ({
+      input: p.input,
+      type: p.type,
+      outputPreview: p.output?.substring(0, 50) + "..."
+    })));
 
     return patterns.map((pattern) => ({
       ...pattern,

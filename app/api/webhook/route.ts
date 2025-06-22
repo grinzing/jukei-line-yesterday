@@ -26,6 +26,7 @@ let patternsLoadingPromise: Promise<void> | null = null
 // Load patterns on startup
 const loadPatterns = async () => {
   try {
+    console.log("Starting to load patterns...");
     messagePatterns = loadMessagePatternsFromCSV("public/Responses.csv")
     console.log(`Loaded ${messagePatterns.length} message patterns from Responses.csv`)
     
@@ -44,6 +45,18 @@ const loadPatterns = async () => {
         type: welcomePattern.type,
         hasOutput: !!welcomePattern.output,
         outputLength: welcomePattern.output?.length
+      })
+    }
+    
+    // デバッグ: 幻のクレーンゲーム完了パターンを確認
+    const cranePattern = messagePatterns.find(p => p.input === "幻のクレーンゲーム完了")
+    console.log("Crane game pattern found:", !!cranePattern)
+    if (cranePattern) {
+      console.log("Crane game pattern details:", {
+        input: cranePattern.input,
+        type: cranePattern.type,
+        hasOutput: !!cranePattern.output,
+        outputLength: cranePattern.output?.length
       })
     }
   } catch (error) {
